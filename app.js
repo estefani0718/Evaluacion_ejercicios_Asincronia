@@ -1,4 +1,4 @@
-import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos,solicitarPost,solicitarComments,solicitarUsers} from "./MODULOS/index.js";
+import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos,solicitarPost,solicitarPostId,solicitarComments,solicitarUsers} from "./MODULOS/index.js";
 
 
 const URL = "https://jsonplaceholder.typicode.com";
@@ -15,7 +15,7 @@ while(true){
         5. Solicitar todos los usuarios en una única petición, a estos usuarios le debemos\n
         agregar todos sus posts y a cada post le debemos agregar todos sus comentarios.\n
         Luego a cada usuario le agregamos todos sus álbumes y a cada álbum le\n
-        agregamos todas sus fotografías.`
+        agregamos todas sus fotografías.\n 6.salir` 
     );
    if(opcion==1){
     console.log("primer ejercicio:")
@@ -81,7 +81,39 @@ while(true){
 
    }else if(opcion==5){
 
-   }
+    const manejardatos = async () => {
+      //creamos una variable de tipo constante , que almacenara una funcion con un parametro,
+      //  la cual se esperara a que esta se resuelva como promesa 
+      const usuarios =  await solicitarUsers(URL);
+      // retornamos la espera de un listado de promesas , la cual se ejcutara en paralelo 
+      // dentro de ella estas los array de los objetos , que se recorrera con map  y otra funcion asincrona 
+      return await Promise.all(usuarios.map(async(usuario)=>{
+          //creamos una variable de tipo constante , que almacenara una funcion con dos parametros,
+        // la cual se esperara a que esta se resuelva como promesa 
+          const posts = await solicitarPostId(URL,usuario);// ya recorrido los objetos se envia las variables a las funciones para que hagan su proceso 
+          //creamos una variable de tipo constante , que almacenara una funcion con dos parametros,
+        // la cual se esperara a que esta se resuelva como promesa 
+          const albums = await solicitarAlbums(URL, usuario.id); 
+          // creamos otra variable de tipo constante , en ella se esperara a que se cumpla un anidados de promesas en paralelo 
+          const albumFotos=await  Promise.all(albums.map(async (album)=>{// la cula recorre los objetos del arrays con el id 
+           // dentro de esta estara otra constante , que envia dos parametros a la funcion y esta espera a que se cumpla la promesa
+              const fotos=await solicitarFotos(URL,album);
+              // se retorna lo que antes previamente recorrimos , con un spread o un metodo de propagacion 
+              return {...album,fotos}
+          }))
+          const comentPost = await Promise.all( posts.map(async(post)=>{
+              const coments = await solicitarComments(URL,post);
+              return {...post,coments};
+          }));
+          return {...usuario,comentPost,albumFotos};
+      }));
+    };
+    // se llama a la funcion principal , para que ejecute , y pase la respuest apor un then  y se imprima todo 
+    manejardatos().then((data)=>{
+        console.log(data);
+    });
 
+   
+  }
 
 }

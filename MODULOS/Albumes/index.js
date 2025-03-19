@@ -1,1 +1,1 @@
-import { solicitudAlbums } from "./solicitar_album";
+import { solicitudAlbums } from "./solicitar_albumId";
