@@ -1,4 +1,4 @@
-import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos,solicitarPost,solicitarComments} from "./MODULOS/index.js";
+import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos,solicitarPost,solicitarComments,solicitarUsers} from "./MODULOS/index.js";
 
 
 const URL = "https://jsonplaceholder.typicode.com";
@@ -69,7 +69,15 @@ while(true){
 
    }else if(opcion==4){
 
-    
+    const datosUser=async (URL) => {
+      const datosUsuario=await solicitarUsers(URL);
+      return datosUsuario.map((usuario)=>{
+        return {"nombre":usuario.name,"telefono":usuario.phone};
+      })
+    }
+    datosUser().then((usuarios)=>{
+      console.log(usuarios)
+    })
 
    }else if(opcion==5){
 
