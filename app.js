@@ -1,4 +1,4 @@
-import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos} from "./MODULOS/index.js";
+import { listarTareasUsuario ,solicitarusername,solicitarAlbums,solicitarFotos,solicitarPost,solicitarComments} from "./MODULOS/index.js";
 
 
 const URL = "https://jsonplaceholder.typicode.com";
@@ -51,9 +51,25 @@ while(true){
     }
     await datosUserAlbums().then((datos)=>{console.log(datos)});
    }else if(opcion==3){
+    const datosPostUser=async(URL)=>{
+      let titulo =prompt ("ingrese el nombre o titulo de post :");
+      try {
+        const posts=await solicitarPost(URL);
+        const filterPost= posts.filter((post)=>post.title==titulo)
+        return await Promise.all(filterPost.map(async(post)=>{
+          const comentarios= await solicitarComments(URL,post.id);
+           return {...posts ,comentarios}
+        }))
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+    datosPostUser().then((post)=>{console.log(post);})
+
+   }else if(opcion==4){
 
     
-   }else if(opcion==4){
 
    }else if(opcion==5){
 

@@ -1,1 +1,1 @@
-import { solitarFotos } from "./solicitar_fotos";
+import { solitarFotos } from "./solicitar_fotosId";

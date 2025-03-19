@@ -1,0 +1,1 @@
+import { solicitarPost } from "./solicitar_Post";
