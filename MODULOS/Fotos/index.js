@@ -1,0 +1,1 @@
+import { solitarFotos } from "./solicitar_fotos";
